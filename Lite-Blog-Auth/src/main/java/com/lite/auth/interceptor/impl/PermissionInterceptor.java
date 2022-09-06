@@ -29,7 +29,7 @@ import java.util.Objects;
  * @date 2022/8/27 19:53
  */
 @Slf4j
-@Order(4)
+@Order(40)
 @Component
 public class PermissionInterceptor extends BaseInterceptor {
 
