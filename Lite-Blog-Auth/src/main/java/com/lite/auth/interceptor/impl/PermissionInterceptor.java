@@ -45,6 +45,10 @@ public class PermissionInterceptor extends BaseInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 
+        if (!systemConfig.isEnable()){
+            return true;
+        }
+
         //取出用户访问的路径
         String requestUrl = request.getRequestURI();
 

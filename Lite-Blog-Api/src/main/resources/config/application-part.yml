@@ -51,7 +51,7 @@ cos:
 
 #系统设置
 sys:
-  #是否开启接口自动扫描
+  #是否启用此模块
   enable: true
   #开发时建议打开此项
   log-enable: true
