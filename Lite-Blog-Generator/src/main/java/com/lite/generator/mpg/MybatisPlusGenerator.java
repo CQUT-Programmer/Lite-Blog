@@ -112,6 +112,11 @@ public class MybatisPlusGenerator extends MybatisPlusAbstractGenerator {
             builder.notLikeTable(new LikeTable(mybatisInfo.getNotLikeTable()));
         }
 
+        //表名前缀转换
+        if (mybatisInfo.getTablePrefix().length > 0) {
+            builder.addTablePrefix(mybatisInfo.getTablePrefix());
+        }
+
         //entity策略配置
         Entity.Builder entityBuilder = builder.entityBuilder()
                 .formatFileName(mybatisInfo.getEntityFormatName())
