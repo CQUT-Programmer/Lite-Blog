@@ -181,4 +181,33 @@ public class AuthServiceImpl implements AuthService {
 
         return true;
     }
+
+    @Override
+    public Boolean forgetPassword(String mail, String newPassword, String code) throws AuthException {
+
+        User user = authMapper.getUser(mail).orElseGet(User::new);
+
+        //验证用户是否存在
+        if (Objects.isNull(user.getMail())) {
+            throw new UserNotFoundException(SystemMessages.get("error.user.auth.userNotFound"));
+        }
+
+        //获取邮箱验证的key
+        String mailKey = MailUtils.getMailRedisKey(user.getMail());
+
+        //读取redis中的邮箱验证信息
+        AuthMailVo authMailVo = redisCache.getCacheObject(mailKey);
+
+        //进行验证码比对
+        if (Objects.isNull(authMailVo) || !code.equals(authMailVo.getAuthCode())) {
+            throw new AuthException(HttpStatus.BAD_REQUEST.value(), SystemMessages.get("error.user.auth.authCodeFail"));
+        }
+
+        //修改密码
+        if (!authMapper.updateUserPassword(user.getMail(), newPassword)) {
+            throw new AuthException(HttpStatus.INTERNAL_SERVER_ERROR.value(), SystemMessages.get("error.user.auth.passwordChange"));
+        }
+
+        return true;
+    }
 }
