@@ -7,6 +7,8 @@ import com.lite.common.utils.ResultResponseUtils;
 import com.lite.mail.Vo.MailVo;
 import com.lite.mail.exception.MailException;
 import com.lite.mail.service.MailService;
+import com.lite.system.annotation.RateLimit;
+import com.lite.system.entity.LimitType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -37,6 +39,7 @@ public class MailController {
     }
 
     @PostMapping("/sendAuthMail")
+    @RateLimit(type = LimitType.IpAddress, maxCount = 1, limitTime = 60)
     public ResultResponse<Boolean> sendAuthMail(@RequestParam @NotBlank String target) throws MessagingException, MailException {
         return mailService.sendAuthMail(target) ?
                 ResultResponseUtils.success(true, SystemMessages.get("success.mail.send")) :

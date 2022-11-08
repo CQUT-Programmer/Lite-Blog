@@ -45,7 +45,7 @@ public class PermissionInterceptor extends BaseInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 
-        if (!systemConfig.isEnable()){
+        if (!systemConfig.isEnable()) {
             return true;
         }
 
@@ -59,7 +59,7 @@ public class PermissionInterceptor extends BaseInterceptor {
         Map<String, JSONObject> cacheMap = contextUtils.getRedisCache().getCacheMap(systemConfig.getRedisMapKey());
 
         //取得API信息
-        SystemApi systemApi = JSON.toJavaObject(cacheMap.get(requestUrl), SystemApi.class);
+        SystemApi systemApi = JSON.to(SystemApi.class, cacheMap.get(requestUrl));
 
         if (Objects.isNull(systemApi)) {
             throw new AuthException(HttpStatus.NOT_FOUND.value(), SystemMessages.get("http.code.404"));
