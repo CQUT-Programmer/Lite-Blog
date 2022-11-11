@@ -30,6 +30,14 @@ public class AuthController {
     @Autowired
     UserConverter userConverter;
 
+    /**
+     * 用户登陆接口
+     *
+     * @param mail     用户邮箱
+     * @param password 密码
+     * @return JwtTokenWrapper 登陆成功后返回的Token
+     * @throws AuthException
+     */
     @GetMapping("/login")
     public ResultResponse<JwtTokenWrapper> login(
             @RequestParam @Email @NotBlank String mail,
@@ -41,6 +49,13 @@ public class AuthController {
                 SystemMessages.get("success.user.auth.login"));
     }
 
+    /**
+     * 用户注册接口
+     *
+     * @param userVo 用户视图层对象
+     * @return 是否成功注册
+     * @throws AuthException
+     */
     @PostMapping("/register")
     public ResultResponse<Boolean> register(
             @Validated(NormalGroups.Crud.Insert.class) @RequestBody UserVo userVo)
@@ -52,6 +67,13 @@ public class AuthController {
                 ResultResponseUtils.error(false, SystemMessages.get("error.user.auth.register"));
     }
 
+    /**
+     * 更新一个用户的信息
+     *
+     * @param userVo 用户视图层对象
+     * @return 是否成功更新
+     * @throws AuthException
+     */
     @PostMapping("/updateInfo")
     public ResultResponse<Boolean> updateInfo(@RequestBody UserVo userVo) throws AuthException {
         return service.updateUserInfo(userVo) ?
@@ -59,6 +81,14 @@ public class AuthController {
                 ResultResponseUtils.error(false, SystemMessages.get("error.user.auth.update"));
     }
 
+    /**
+     * 修改用户密码
+     *
+     * @param oldPassword 旧密码
+     * @param newPassword 新密码
+     * @return 是否修改成功
+     * @throws AuthException
+     */
     @PostMapping("/changePassword")
     public ResultResponse<Boolean> changePassword(
             @RequestParam @NotBlank String oldPassword,
@@ -70,6 +100,15 @@ public class AuthController {
                 ResultResponseUtils.error(false, SystemMessages.get("error.user.auth.passwordChange"));
     }
 
+    /**
+     * 忘记密码接口
+     *
+     * @param mail        邮箱
+     * @param newPassword 新密码
+     * @param code        验证码
+     * @return 是否修改成功
+     * @throws AuthException
+     */
     @PostMapping("/forgetPassword")
     public ResultResponse<Boolean> forgetPassword(
             @RequestParam @Email @NotBlank String mail,
@@ -81,6 +120,11 @@ public class AuthController {
                 ResultResponseUtils.error(false, SystemMessages.get("error.user.auth.passwordChange"));
     }
 
+    /**
+     * 登出接口
+     *
+     * @return 是否登出成功
+     */
     @PostMapping("/logout")
     public ResultResponse<Boolean> logout() {
 
@@ -89,6 +133,12 @@ public class AuthController {
                 ResultResponseUtils.error(false, SystemMessages.get("error.user.auth.logout"));
     }
 
+    /**
+     * 刷新Token
+     *
+     * @return 新的Token
+     * @throws UserNotFoundException
+     */
     @GetMapping("/refreshToken")
     public ResultResponse<JwtTokenWrapper> refreshToken()
             throws UserNotFoundException {
